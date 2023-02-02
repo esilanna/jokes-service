@@ -25,12 +25,17 @@ app.get('/jokes', async (req, res, next) => {
           }
 
     else {
-    //const where = {};
+    const where = {};
     // TODO - filter the jokes by tags and content
+    for (const key of  ['joke', 'tags']) {
+      if (req.query[key]) {
+        where[key] = {
+          [Op.like]: `%${req.query[key]}%`
+        }
+      }
+    }
     const jokes = await Joke.findAll(
-      {where: {
-        tags: {[Op.like]: `%${req.query.tags}%`}
-      }}
+      {where}
       // {where: {
       //   tags: {[Op.like]: `%${req.query.tags}%`}
       // }}
